@@ -6,6 +6,7 @@
 #include <string.h>
 #include <vector>
 #include <typeinfo>
+#include <mpi.h>
 #include "Bunny.hpp"
 #include "Animal.hpp"
 #include "Teddy.hpp"
@@ -19,6 +20,14 @@ int main(int argc, char* argv[])
 
 	vector <Animal*> animals;
 	vector <Meadow*> meadows;
+
+ 	int size,tid;
+
+    MPI_Init(&argc, &argv); 
+
+    MPI_Comm_size( MPI_COMM_WORLD, &size );
+    MPI_Comm_rank( MPI_COMM_WORLD, &tid );
+
 
 	int bunnyCount = 10;
 	int teddyCount = 5;
@@ -61,14 +70,18 @@ int main(int argc, char* argv[])
 			animals.push_back(new Teddy(bunnyCount + i));
 		}
 		//TODO:broadcast tle list to others
+		//MPI_Bcast( &meadows, meadowCount, MPI_INT, 0, MPI_COMM_WORLD );
+		//MPI_Bcast( &animals, animals.size(), MPI_INT, 0, MPI_COMM_WORLD );
 	}
 	else
 	{
-		//TODO: mpilisten;
+		//TODO: MPI_Recv;
+		//MPI_Recv( &meadows, meadowCount, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+		//MPI_Recv( &meadows, animals.size(), MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
 	}
 
 	cout << "bunny size = " << animals.at(0)->getSize() << endl;
 
-	return 0;
+    MPI_Finalize();
 }
 
