@@ -10,16 +10,17 @@ class Meadow
 {
   private:
     int id;
+    int maxCapacity;
     int capacity;
 
   protected:
     
   public:
-    Meadow(int id, int capacity);
+    Meadow(int id, int maxCapacity);
 	int tryParty(Animal* animal);
 
 	//getters, setters
-	int getlId();
+	int getId();
 	void setId(int id);
 	int getCapacity();
 	void setCapacity(int id);

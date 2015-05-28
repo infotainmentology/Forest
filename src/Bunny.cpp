@@ -1,4 +1,4 @@
-#include "Bunny.hpp"
+#include "./../include/Bunny.hpp"
 
 
 Bunny :: Bunny(int id) : Animal(id)

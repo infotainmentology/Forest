@@ -1,13 +1,15 @@
-#include "Meadow.hpp"
+#include "./../include/Meadow.hpp"
 
-Meadow :: Meadow(int id, int capacity)
+Meadow :: Meadow(int id, int maxCapacity)
   {
    this->id = id;
-   this->capacity = capacity;
+   this->maxCapacity = maxCapacity;
+   this->capacity = maxCapacity;
+   
   }
 
 //getters, setters
-int Meadow :: getlId()
+int Meadow :: getId()
 {
 	return this->id;
 }

@@ -3,6 +3,8 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
+#include "PartyRequest.hpp"
 
 class Animal {
     
@@ -10,6 +12,8 @@ class Animal {
 
   protected:
 	int id;
+	vector <PartyRequest*> requests;
+	
     
   public:
     Animal(int id);

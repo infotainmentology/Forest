@@ -1,4 +1,4 @@
-#ifndefPartyRequest_hpp
+#ifndef PartyRequest_hpp
 #define PartyRequest_hpp
 
 #include <string>

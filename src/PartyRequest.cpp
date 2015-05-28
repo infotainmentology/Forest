@@ -1,7 +1,7 @@
-#include "PartyRequest.hpp"
+#include "./../include/PartyRequest.hpp"
 
 
-PartyRequest(int aId, int mId, time_t tStmp)
+PartyRequest :: PartyRequest(int aId, int mId, time_t tStmp)
 {
     this->animalId = aId;
 	this->meadowId = mId;
@@ -15,27 +15,27 @@ int PartyRequest :: getAnimalId()
 	return this->animalId;
 }
 
-void PartyRequest :: setAnimalId(int id);
+void PartyRequest :: setAnimalId(int id)
 {
 	this->animalId = id;
 }
 
-int PartyRequest :: getMeadowId();
+int PartyRequest :: getMeadowId()
 {
 	return this->meadowId;
 }
 
-void PartyRequest :: setMeadowId(int id);
+void PartyRequest :: setMeadowId(int id)
 {
 	this->meadowId = id;
 }
 
-time_t PartyRequest :: getTimeStamp();
+time_t PartyRequest :: getTimeStamp()
 {
 	return this->timeStamp;
 }
 
-void PartyRequest :: setTimeStamp(time_t timeStamp);
+void PartyRequest :: setTimeStamp(time_t timeStamp)
 {
 	this->timeStamp = timeStamp;
 }
