@@ -1,8 +1,13 @@
 #------------------------------------------------------------------------------
 
-SOURCE=./include/Animal.hpp ./src/Animal.cpp ./include/Bunny.hpp ./src/Bunny.cpp ./include/Teddy.hpp ./src/Teddy.cpp ./include/Meadow.hpp ./src/Meadow.cpp ./include/PartyRequest.hpp ./src/PartyRequest.cpp ./src/Forest.cpp ./include/Constants.hpp
-MYPROGRAM=forest
-CC=mpic++
+SOURCE = ./include/Animal.hpp ./src/Animal.cpp \
+	./include/Bunny.hpp ./src/Bunny.cpp \
+	./include/Teddy.hpp ./src/Teddy.cpp \
+	./include/Meadow.hpp ./src/Meadow.cpp \
+	./include/PartyRequest.hpp ./src/PartyRequest.cpp \
+	./src/Forest.cpp ./include/Constants.hpp
+MYPROGRAM = forest
+CC = mpic++
 
 #------------------------------------------------------------------------------
 
