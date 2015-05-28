@@ -1,13 +1,15 @@
 
 #include <iostream>
-//#include <cstdlib>
+#include <cstdlib>
 //#include <cstdio>
 #include <ctime>
 #include <stdlib.h>
-#include <string.h>
+//#include <string.h>
+#include <string>
 #include <vector>
 #include <typeinfo>
 #include <mpi.h>
+#include <sstream>
 #include "./../include/Bunny.hpp"
 #include "./../include/Animal.hpp"
 #include "./../include/Teddy.hpp"
@@ -19,11 +21,12 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-
-	//vector <Animal*> animals;
-	Animal* me;
-	vector <Meadow*> meadows;
- 	int numOfThreads,tid;
+    const string wrongInitializationMsg = " mpirun -np [number of processes] ./forest [number of bunnies] [number of teddies] [number of processes] \n \
+    Number of processes must equal number of bunnies + number of teddies";
+    //vector <Animal*> animals;
+    Animal* me;
+    vector <Meadow*> meadows;
+    int numOfThreads,tid;
 	
     MPI_Status status;
     MPI_Init(&argc, &argv); 
@@ -31,30 +34,38 @@ int main(int argc, char **argv)
     MPI_Comm_size( MPI_COMM_WORLD, &numOfThreads );
     MPI_Comm_rank( MPI_COMM_WORLD, &tid );
 
+    int bunnyCount = 10;
+    int teddyCount = 5;
+    int meadowCount = 5;
 
-	int bunnyCount = 10;
-	int teddyCount = 5;
-	int meadowCount = 5;
-
-
-	//we should take into consideration 
-	//mpirun -np 10 -hostfiles hostFilesNames bunnyCount teddyCount meadowCount 
-	//form of input
-/*
-	if (argc >=3)
+    if (argc >=4)
+    { 
+      	bunnyCount = atoi(argv[1]);
+	teddyCount = atoi(argv[2]);
+	meadowCount = atoi(argv[3]);
+	
+	if ( (argv[1] != "0" && bunnyCount == 0) ||
+	    (argv[2] != "0" && teddyCount == 0) ||
+	    (argv[3] != "0" && meadowCount == 0) )
 	{
-		try
-		{
-			bunnyCount = atoi(argv[0]);
-			teddyCount = atoi(argv[1]);
-			meadowCount = atoi(argv[2]);
-		}
-		catch (...)
-		{
-			cerr << "Argv conversion unsuccessful" << endl;
-		}
+	    if (tid == 0)
+	    {
+		cerr << "Argv conversion unsuccessful" << endl;
+		//MPI_Abort(MPI_COMM_WORLD, -1);
+	    }
 	}
-*/
+    }
+
+    if ( (numOfThreads != bunnyCount + teddyCount) || (bunnyCount < 0) ||
+	(teddyCount < 0) || (meadowCount <1) )
+    {
+	if (tid == 0)
+	{
+	    c/err << wrongInitializationMsg << endl;
+	    /MPI_Abort(MPI_COMM_WORLD, -1);
+	}
+    }
+	
 	if (tid == 0)
 	{
 		srand(time(NULL));
@@ -86,7 +97,6 @@ int main(int argc, char **argv)
 		    int toSend[2];
 		    toSend[0] = meadows.at(i)->getId();
 		    toSend[1] = meadows.at(i)->getCapacity();
-		    cout << toSend[0] << endl;
 		    MPI_Send(&toSend, 2, MPI_INT, thNum, 100, MPI_COMM_WORLD);
 		  }
 		}
