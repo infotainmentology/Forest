@@ -1,13 +1,38 @@
 #include "./../include/Animal.hpp"
 
 
-Animal::Animal(int id)
-{
-    this->id = id;
+
+void Animal :: handleRecievingMessages()
+{	
+    int toRecieve[5];
+    int flag;
+    bool programLoop = true;
+    while(programLoop)
+    {  
+	MPI_Recv(&toRecieve, 5, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+	cout << "myId = " << id << " MPI status = " << status.MPI_TAG << " msg from = " <<  toRecieve[0] << endl;
+    }
 }
 
+Animal::Animal(int id)
+{
+      this->id = id;
+      //std::thread t1 = std::thread(&Animal::handleRecievingMessages, this);
+      
+     //std::thread msgHandler (handleRecievingMessages); 
+    //party();
+      //t1.join();
+}
+
+
+
+/**
+ * this method is main loop for each animal
+ */
 void Animal :: party()
 {
+    std::thread t1 = std::thread(&Animal::handleRecievingMessages, this);
+     broadcastPartyMsg();
 	//TODO: code of algorithm here:
 	/*
 	*1) sleep some
@@ -19,6 +44,26 @@ void Animal :: party()
 	*7) if you're first and there's still space on currentPartyMedow left, go to party \(^__^)/
 	*/
 }
+
+void Animal :: broadcastPartyMsg()
+{
+
+    int toSend[5] = {0, 0, 0, 0, 0 };
+    toSend[0] = id;
+    for (int i=0; i<animalCount; i++)
+    {
+	if (i != id)
+	{
+	  cout << "myID = " << id << " sending to = " << i << endl;
+	  MPI_Send(&toSend, 5, MPI_INT, id, 1, MPI_COMM_WORLD);
+	}
+	  
+    }
+}
+
+
+
+
 
 int Animal :: getSize()
 {
@@ -33,4 +78,18 @@ int Animal :: getId()
 void Animal :: setId(int id)
 {
 	this->id = id;
+}
+
+void Animal :: setMeadows(vector <Meadow*> meadows)
+{
+	this->meadows = meadows;
+}
+
+void Animal :: setCounts(int ac, int bc, int tc, int mc)
+{
+	this->animalCount = ac;
+	this->bunnyCount = bc;
+	this->teddyCount = tc;
+	this->meadowCount = mc;
+  
 }

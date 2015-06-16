@@ -4,7 +4,7 @@
 //#include <cstdio>
 #include <ctime>
 #include <stdlib.h>
-//#include <string.h>
+#include <string.h>
 #include <string>
 #include <vector>
 #include <typeinfo>
@@ -23,7 +23,6 @@ int main(int argc, char **argv)
 {
     const string wrongInitializationMsg = " mpirun -np [number of processes] ./forest [number of bunnies] [number of teddies] [number of processes] \n \
     Number of processes must equal number of bunnies + number of teddies";
-    //vector <Animal*> animals;
     Animal* me;
     vector <Meadow*> meadows;
     int numOfThreads,tid;
@@ -37,22 +36,25 @@ int main(int argc, char **argv)
     int bunnyCount = 10;
     int teddyCount = 5;
     int meadowCount = 5;
-
+    
+    bool startProgram = true;
+    
     if (argc >=4)
     { 
       	bunnyCount = atoi(argv[1]);
 	teddyCount = atoi(argv[2]);
 	meadowCount = atoi(argv[3]);
 	
-	if ( (argv[1] != "0" && bunnyCount == 0) ||
-	    (argv[2] != "0" && teddyCount == 0) ||
-	    (argv[3] != "0" && meadowCount == 0) )
+	if ( ((strcmp(argv[1], "0") != 0) && bunnyCount == 0) ||
+	    ((strcmp(argv[2], "0") != 0) && teddyCount == 0) ||
+	    ((strcmp(argv[3], "0") != 0) && meadowCount == 0) )
 	{
 	    if (tid == 0)
 	    {
 		cerr << "Argv conversion unsuccessful" << endl;
 		//MPI_Abort(MPI_COMM_WORLD, -1);
 	    }
+	    startProgram = false;
 	}
     }
 
@@ -61,11 +63,16 @@ int main(int argc, char **argv)
     {
 	if (tid == 0)
 	{
-	    c/err << wrongInitializationMsg << endl;
-	    /MPI_Abort(MPI_COMM_WORLD, -1);
+	    cerr << wrongInitializationMsg << endl;
+	    //MPI_Abort(MPI_COMM_WORLD, -1);
 	}
+	startProgram = false;
     }
 	
+    //if no errors were made during initialization
+    if (startProgram)
+    {
+	//if first bunny
 	if (tid == 0)
 	{
 		srand(time(NULL));
@@ -75,18 +82,6 @@ int main(int argc, char **argv)
 		  meadows.push_back(new Meadow(i, rand() % maxMeadowCapacity));
 	
 		}
-/*
-		for (int i = 0; i < bunnyCount; ++i)
-		{
-			animals.push_back(new Bunny(i));
-
-		}
-
-		for (int i = 0; i < teddyCount; ++i)
-		{
-		    animals.push_back(new Teddy(bunnyCount + i));
-		}
-*/
 		
 		//broadcasting meadows
 		for (int thNum = 1; thNum < numOfThreads; thNum++)
@@ -108,7 +103,7 @@ int main(int argc, char **argv)
 	    for (int i=0; i< meadowCount; i++)
 	    {
 		MPI_Recv(&toRecieve, 2, MPI_INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);	  
-		cout << "tid = " <<  tid << ",recieved " << toRecieve[0] <<  "+" << toRecieve[1] << endl;
+		//cout << "tid = " <<  tid << ",recieved " << toRecieve[0] <<  "+" << toRecieve[1] << endl;
 		meadows.push_back(new Meadow(toRecieve[0], toRecieve[1]));
 	    }
 	}
@@ -120,8 +115,15 @@ int main(int argc, char **argv)
 	else
 	{
 	    me = new Teddy(tid);
-	}
+	}	
+	me->setMeadows(meadows);
+	me->setCounts(numOfThreads, bunnyCount, teddyCount, meadowCount);
+	me->party();
 	
+	//me -> broadcastPartyMsg();
+	//me -> handleRecievingMessages();
+	
+    }
 
     MPI_Finalize();
 }

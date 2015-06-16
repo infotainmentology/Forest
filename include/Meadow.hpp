@@ -16,8 +16,8 @@ class Meadow
   protected:
     
   public:
-    Meadow(int id, int maxCapacity);
-	int tryParty(Animal* animal);
+	Meadow(int id, int maxCapacity);
+	//int tryParty(Animal* animal);
 
 	//getters, setters
 	int getId();
