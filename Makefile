@@ -17,7 +17,7 @@ all: $(MYPROGRAM)
 
 
 $(MYPROGRAM): $(SOURCE)
-	$(CC) -std=c++11 $(SOURCE) -o$(MYPROGRAM)
+	$(CC) -std=c++11 -lpthread $(SOURCE) -o$(MYPROGRAM)
 
 clean:
 	rm -f $(MYPROGRAM)

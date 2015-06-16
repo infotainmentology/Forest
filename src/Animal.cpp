@@ -31,8 +31,9 @@ Animal::Animal(int id)
  */
 void Animal :: party()
 {
+    //pthread_create(&tid, NULL, handleRecievingMessages, NULL);
     std::thread t1 = std::thread(&Animal::handleRecievingMessages, this);
-     broadcastPartyMsg();
+     //broadcastPartyMsg();
 	//TODO: code of algorithm here:
 	/*
 	*1) sleep some

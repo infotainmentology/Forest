@@ -6,6 +6,7 @@
 #include <vector>
 #include <mpi.h>
 #include <thread> 
+#include <pthread.h>
 #include "PartyRequest.hpp"
 #include "Meadow.hpp"
 
@@ -19,11 +20,14 @@ class Animal {
 	int id;
 	vector <PartyRequest*> requests;
 	MPI_Status status;
+	MPI_Status recvStatus;
+	MPI_Request request;
 	vector <Meadow*> meadows;
 	int animalCount;
 	int bunnyCount;
 	int teddyCount;
 	int meadowCount;
+	pthread_t tid;
 	
     
   public:
